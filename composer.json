@@ -1,5 +1,5 @@
 {
-    "name": "contentblocks/contentblocks-reg-api-migration",
+    "name": "passionweb/contentblocks-reg-api-migration",
     "type": "typo3-cms-extension",
     "description": "Migrate content blocks from Content Blocks Registration API to TYPO3 CMS Content Blocks.",
     "homepage": "https://www.passionweb.de",

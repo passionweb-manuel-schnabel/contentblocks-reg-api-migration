@@ -25,7 +25,7 @@ Adds a migration command to migrate content blocks from the Content Blocks Regis
 
 Add via composer:
 
-    composer require contentblocks/contentblocks-reg-api-migration --dev
+    composer require passionweb/contentblocks-reg-api-migration --dev
 
 * Install the extension via composer
 * Flush TYPO3 and PHP Cache
