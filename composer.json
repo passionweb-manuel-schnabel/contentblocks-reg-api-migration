@@ -1,0 +1,28 @@
+{
+    "name": "contentblocks/contentblocks-reg-api-migration",
+    "type": "typo3-cms-extension",
+    "description": "Migrate content blocks from Content Blocks Registration API to TYPO3 CMS Content Blocks.",
+    "homepage": "https://www.passionweb.de",
+    "license": ["GPL-2.0-or-later"],
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Manuel Schnabel",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "typo3/cms-core":  "^12.4",
+        "contentblocks/content-blocks": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "ContentBlocks\\ContentBlocksRegApiMigration\\": "Classes"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "contentblocks_reg_api_migration"
+        }
+    }
+}
