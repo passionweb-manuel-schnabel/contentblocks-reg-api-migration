@@ -27,6 +27,11 @@ Add via composer:
 
     composer require passionweb/contentblocks-reg-api-migration --dev
 
+or
+
+    composer require passionweb/contentblocks-reg-api-migration:dev-master --dev
+
+
 * Install the extension via composer
 * Flush TYPO3 and PHP Cache
 
