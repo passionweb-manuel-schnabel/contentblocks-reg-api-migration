@@ -38,10 +38,11 @@ use TYPO3\CMS\Core\Core\Environment;
 class ContentBlockMigrationCommand extends Command
 {
     public function __construct(
-        protected readonly PackageResolver $packageResolver,
-        protected readonly CommandUtility $commandUtility,
+        protected readonly PackageResolver    $packageResolver,
+        protected readonly CommandUtility     $commandUtility,
         protected readonly CommandLineUtility $commandLineUtility
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -79,16 +80,24 @@ class ContentBlockMigrationCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        if(!$io->askQuestion(new ConfirmationQuestion('We strongly recommend that you do not run this command in production mode!. Please perform a database backup before execution! Do you have a database backup and want to go ahead? (y/n)', false))) {
+        if (!$io->askQuestion(new ConfirmationQuestion('We strongly recommend that you do not run this command in production mode!. Please perform a database backup before execution! Do you have a database backup and want to go ahead? (y/n)', false))) {
             $output->writeln('<error>Execution aborted.</error>');
             return Command::FAILURE;
         }
         $availablePackages = $this->packageResolver->getAvailablePackages();
+
         if ($input->getOption('package-path')) {
-            $originPackagePath = Environment::getPublicPath().$input->getOption('package-path');
+            $originPackagePath = $input->getOption('package-path');
         } else {
             $packagePath = $io->askQuestion(new Question('Enter relative path from public directory to content blocks which should be migrated (with trailing slash)'));
-            $originPackagePath = Environment::getPublicPath().$packagePath;
+            $originPackagePath = $packagePath;
+        }
+
+        // Fix Missing / at beginning of package path:
+        $originPackagePath = Environment::getPublicPath() . "/" . ltrim($originPackagePath, "/");
+
+        if (!is_dir($originPackagePath)) {
+            throw new \RuntimeException('Please check the given --package-path, as absolute Path results in a not existing folder: ' . $originPackagePath, 1678699706);
         }
         $availableContentBlocks = $this->commandUtility->getAvailableContentBlocks($originPackagePath);
         if ($availablePackages === []) {
@@ -121,16 +130,15 @@ class ContentBlockMigrationCommand extends Command
         if ($input->getOption('vendor-name')) {
             $newVendorName = $input->getOption('vendor-name');
         } else {
-            $newVendorName = $io->askQuestion(new Question('Enter new vendor name new if it you want to change them (Default: "'. $targetExtension .'")'));
-            if($newVendorName === null) {
+            $newVendorName = $io->askQuestion(new Question('Enter new vendor name new if it you want to change them (Default: "' . $targetExtension . '")'));
+            if ($newVendorName === null) {
                 $newVendorName = $targetExtension;
             }
         }
         // migrate only selected content block
-        if($sourceContentBlock !== null) {
-            $this->commandUtility->migrateContentBlock($originPackagePath.$sourceContentBlock, $sourceContentBlock, $availablePackages[$targetExtension]->getPackagePath(), $newVendorName, $output);
-        }
-        // migrate all content blocks
+        if ($sourceContentBlock !== null) {
+            $this->commandUtility->migrateContentBlock($originPackagePath . $sourceContentBlock, $sourceContentBlock, $availablePackages[$targetExtension]->getPackagePath(), $newVendorName, $output);
+        } // migrate all content blocks
         else {
             $contentBlocksDir = new DirectoryIterator($originPackagePath);
             foreach ($contentBlocksDir as $contentBlockFolder) {
