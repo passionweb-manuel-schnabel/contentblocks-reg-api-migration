@@ -4,7 +4,7 @@
     "description": "Migrate content blocks from Content Blocks Registration API to TYPO3 CMS Content Blocks.",
     "homepage": "https://www.passionweb.de",
     "license": ["GPL-2.0-or-later"],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "authors": [
         {
             "name": "Manuel Schnabel",
