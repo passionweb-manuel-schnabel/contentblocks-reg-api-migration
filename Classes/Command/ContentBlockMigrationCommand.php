@@ -84,11 +84,19 @@ class ContentBlockMigrationCommand extends Command
             return Command::FAILURE;
         }
         $availablePackages = $this->packageResolver->getAvailablePackages();
+
         if ($input->getOption('package-path')) {
-            $originPackagePath = Environment::getPublicPath().$input->getOption('package-path');
+            $originPackagePath = $input->getOption('package-path');
         } else {
             $packagePath = $io->askQuestion(new Question('Enter relative path from public directory to content blocks which should be migrated (with trailing slash)'));
-            $originPackagePath = Environment::getPublicPath().$packagePath;
+            $originPackagePath = $packagePath;
+        }
+
+        // Fix Missing / at beginning of package path:
+        $originPackagePath = Environment::getPublicPath() . "/" . ltrim( $originPackagePath , "/") ;
+
+        if ( !is_dir($originPackagePath)) {
+            throw new \RuntimeException('Please check the given --package-path, as absolute Path results in a not existing folder: ' . $originPackagePath , 1678699706);
         }
         $availableContentBlocks = $this->commandUtility->getAvailableContentBlocks($originPackagePath);
         if ($availablePackages === []) {

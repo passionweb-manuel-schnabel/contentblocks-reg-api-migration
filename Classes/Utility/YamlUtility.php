@@ -11,6 +11,7 @@ class YamlUtility
         'Url' =>  ['type' => 'Link'],
         'Image' => ['type' => 'File'],
         'Date' => ['type' => 'DateTime'],
+        'Integer' => ['type' => 'Number'],
         'Money' => ['type' => 'Text'],
         'Select' => ['renderType' => 'selectSingle'],
         'MultiSelect' => ['type' => 'Select', 'renderType' => 'selectMultipleSideBySide'],
