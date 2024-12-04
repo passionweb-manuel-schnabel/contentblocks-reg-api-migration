@@ -87,13 +87,12 @@ class CommandUtility
 
         $currentVendorName = explode('/', $name)[0];
         $package = explode('/', $name)[1];
-        $onlyDbMigrations = false;
+
         if($currentVendorName === $newVendorName) {
             $currentVendorName = 'typo3-contentblocks';
-            $onlyDbMigrations = true;
         }
         // refactor EditorInterface.yaml
-        $this->yamlUtility->refactorEditorInterface($packagePath, $package, $newVendorName, $tableStructure, $hasCollection, $onlyDbMigrations);
+        $this->yamlUtility->refactorEditorInterface($packagePath, $package, $newVendorName, $tableStructure, $hasCollection, $contentBlockFilename);
         // database migrations
         $this->databaseUtility->executeDatabaseMigrations($tableStructure, $currentVendorName, $newVendorName, $package, $hasCollection, $output);
 

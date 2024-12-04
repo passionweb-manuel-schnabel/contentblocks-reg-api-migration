@@ -28,18 +28,16 @@ class YamlUtility
         string $newVendorName,
         array &$tableStructure,
         bool &$hasCollection,
-        bool $onlyDbMigrations
+        string $contentBlockFolder
     ): void
     {
         $package = str_replace('_', '-', $package);
-        $currentYamlContents = file_get_contents($packagePath."ContentBlocks/ContentElements/".$package."/EditorInterface.yaml");
+        $currentYamlContents = file_get_contents($packagePath."ContentBlocks/ContentElements/".$contentBlockFolder."/EditorInterface.yaml");
         $currentYamlData = Yaml::parse($currentYamlContents);
         $resultArray['name'] = $newVendorName . '/' . $package;
         $resultArray = array_merge($resultArray, $this->processYamlArray($currentYamlData, $tableStructure, $newVendorName, str_replace('-', '_', $package), $hasCollection));
-        if(!$onlyDbMigrations) {
-            $convertedEditorInterfaceYaml = Yaml::dump($resultArray, 10, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
-            file_put_contents($packagePath."ContentBlocks/ContentElements/".$package."/EditorInterface.yaml", $convertedEditorInterfaceYaml);
-        }
+        $convertedEditorInterfaceYaml = Yaml::dump($resultArray, 10, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
+        file_put_contents($packagePath."ContentBlocks/ContentElements/".$contentBlockFolder."/EditorInterface.yaml", $convertedEditorInterfaceYaml);
     }
 
     protected function processYamlArray(
@@ -76,21 +74,21 @@ class YamlUtility
                 if($value === 'Collection') {
                     $collectionIdentifier = str_replace('-', '_', $inputArray['identifier']);
                     $currentTable = $table;
-                    $table = $vendor.'_'.$package.'_'.$inputArrayIdentifier;
+                    $table = str_replace('-', '', $vendor) . '_' . str_replace(['-','_'], '', $package) . '_' . $inputArrayIdentifier;
                     $tableStructure[$table] = [
                         'content_block_foreign_table_field' => $currentTable,
-                        'content_block_field_identifier' => 'cb_'.$package.'_'.$inputArrayIdentifier
+                        'content_block_field_identifier' => 'cb_' . $package . '_' . $inputArrayIdentifier
                     ];
                     $hasCollection = true;
                 }
                 if($value === 'File' && $table !== 'tt_content') {
-                    $tableStructure['sys_file_reference']['cb_'.$package.'_'.$collectionIdentifier.'_'.$inputArrayIdentifier] = [
+                    $tableStructure['sys_file_reference']['cb_' . $package . '_' . $collectionIdentifier . '_' . $inputArrayIdentifier] = [
                         'collectionIdentifier' => $collectionIdentifier,
                         'fieldname' => $inputArrayIdentifier,
                         'tablenames' => $table,
                     ];
                 } elseif($value === 'File') {
-                    $tableStructure['sys_file_reference']['cb_'.$package.'_'.$inputArrayIdentifier] = [
+                    $tableStructure['sys_file_reference']['cb_' . $package . '_' . $inputArrayIdentifier] = [
                         'fieldname' => $useExistingField ? $inputArrayIdentifier : $vendor . '_' . str_replace('_', '', $package) . '_' . $inputArrayIdentifier,
                         'fieldnameOld' => $inputArrayIdentifier,
                         'tablenames' => $table,
