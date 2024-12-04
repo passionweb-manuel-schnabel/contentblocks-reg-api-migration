@@ -13,7 +13,8 @@
     ],
     "require": {
         "typo3/cms-core":  "^12.4",
-        "contentblocks/content-blocks": "*"
+        "helhum/typo3-console": "^8",
+        "friendsoftypo3/content-blocks": "*"
     },
     "autoload": {
         "psr-4": {
