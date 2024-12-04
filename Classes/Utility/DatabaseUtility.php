@@ -142,7 +142,7 @@ class DatabaseUtility
      */
     protected function fetchFieldsFromCollectionsTable(array $fields, string $parentTable, string $parentField, bool $excludeTranslations = true): array {
         // get core fields + content_block_foreign_field
-        $select = 'uid,pid,crdate,tstamp,starttime,endtime,deleted,hidden,sorting,sys_language_uid,l10n_parent,l10n_diffsource,t3_origuid,content_block_foreign_field,';
+        $select = 'uid,pid,crdate,tstamp,starttime,endtime,deleted,hidden,sorting,sys_language_uid,l10n_parent,l10n_diffsource,content_block_foreign_field,';
         foreach ($fields as $oldFieldname => $newFieldname) {
             $select .= $oldFieldname . ',';
         }
@@ -176,8 +176,6 @@ class DatabaseUtility
         // get/set foreign_table_parent_uid from content_block_foreign_field
         $row['foreign_table_parent_uid'] = $row['content_block_foreign_field'];
         unset($row['content_block_foreign_field']);
-        // reset t3_origuid
-        $row['t3_origuid'] = 0;
         $affectedRows = $connection->insert($childTable, $row);
         if($affectedRows === 0) {
             throw new \RuntimeException(
