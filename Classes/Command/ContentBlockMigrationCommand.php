@@ -57,7 +57,7 @@ class ContentBlockMigrationCommand extends Command
             'vendor-name',
             'vn',
             InputOption::VALUE_REQUIRED,
-            'Enter new vendor name new if it you want to change them (Default: extension name).'
+            'Enter new vendor name if you want to change them (Default: extension name).'
         );
         $this->addOption(
             'package-path',
